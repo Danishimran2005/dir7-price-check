@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DIR7 Product Price</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f2f6fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .card {
+      width: 320px;
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .header {
+      background: #2F80ED;
+      color: white;
+      padding: 18px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .content {
+      padding: 24px;
+    }
+
+    .item-name {
+      font-size: 24px;
+      font-weight: bold;
+      color: #1F2D3D;
+      margin-bottom: 12px;
+    }
+
+    .price {
+      font-size: 32px;
+      font-weight: bold;
+      color: #27AE60;
+      margin-bottom: 12px;
+    }
+
+    .desc {
+      font-size: 16px;
+      color: #555;
+    }
+
+    .error {
+      color: #EB5757;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="header">DIR7 Price Check</div>
+    <div class="content">
+      <div id="itemName" class="item-name">Loading...</div>
+      <div id="price" class="price"></div>
+      <div id="desc" class="desc"></div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    const apiUrl = "https://script.google.com/macros/s/AKfycbxWY_FsR22qqttk9mZ1AlqJahVX3CSfh9SltNOWeKiIaEFIkXxvWC25ciHFzkwhcS5Uig/exec?id=" + id;
+
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          document.getElementById("itemName").innerHTML = "<span class='error'>" + data.error + "</span>";
+          document.getElementById("price").innerText = "";
+          document.getElementById("desc").innerText = "";
+        } else {
+          document.getElementById("itemName").innerText = data.item;
+          document.getElementById("price").innerText = "RM " + data.price;
+          document.getElementById("desc").innerText = data.description;
+        }
+      })
+      .catch(error => {
+        document.getElementById("itemName").innerHTML = "<span class='error'>Failed to load product</span>";
+        document.getElementById("price").innerText = "";
+        document.getElementById("desc").innerText = "";
+      });
+  </script>
+
+</body>
+</html>
